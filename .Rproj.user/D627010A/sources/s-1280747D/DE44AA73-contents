@@ -1,0 +1,124 @@
+library(xml2)
+library(rvest)
+library(stringr)
+library(hash)
+library(tidyverse)
+library(countrycode)
+library(colorspace)
+
+flgs <- read_html("https://vexillology.fandom.com/wiki/User:HansLN/National_flag_colors")
+html_nodes(flgs, "ul") %>% 
+  html_nodes("li") %>% 
+  html_nodes("span")
+
+countries <- html_text(html_nodes(flgs, "li"))[45:239]
+countries <- na.omit(countries)
+
+flag_hash <- hash()
+cs <- c()
+cols <- c()
+for (n in 1:length(countries)) {
+  country <- str_trim(strsplit(countries[n], ":")[[1]][1])
+  colors <- strsplit(str_squish(strsplit(countries[n], ":")[[1]][2]), " ")[[1]]
+  flag_hash[country] <- colors
+  cs <- c(cs, country)
+  #cols <- c(cols, str_trim(str_squish(strsplit(countries[n], ":")[[1]][2])))
+  col_string <- str_trim(str_squish(strsplit(countries[n], ":")[[1]][2]))
+  col_string <- str_trim(str_split(col_string, "url")[[1]][1])
+  cols <- c(cols, col_string)
+}
+cols
+flag_hash["Ecuador"]
+
+country_colors <- data.frame(country=cs, colors=cols)
+
+
+short_cols <- c()
+for (c in (cols)) {
+  for (i in strsplit(c, " ")) {
+    if (length(i) < 7) {
+      short_cols <- c(short_cols, i)
+    }
+  }
+}
+
+threes <- c()
+for (three in unique(short_cols)) {
+  if (nchar(three) < 7) {
+    threes <- c(threes, three)
+  }
+}
+test <- gsub("white", "#ffffff", country_colors$colors)
+
+country_colors <- country_colors %>% 
+  mutate(old_colors = colors) %>% 
+  mutate(iso3 = countrycode(country, origin="country.name", destination = "iso3c")) %>% 
+  mutate(iso2 = countrycode(country, origin="country.name", destination = "iso2c")) %>% 
+  #mutate(colors = gsub("#ff0 ", "#ff0000 ", gsub("#fc0 ", "#fc0000 ", gsub("#f00 ", "#f00000 ", gsub("black", "#000000", gsub("white", "#ffffff", gsub("#000 ", "#000000 ", gsub("#fff ", "#ffffff ", colors)))))))) %>% 
+  #mutate(colors = gsub("(url\\(.*\\))", "", colors)) %>% 
+  #mutate(colors = ifelse("url" %in% country_colors$colors, str_trim(str_split(country_colors$colors, "url")[[1]][1]), country_colors$colors)) %>% 
+  #mutate(colors = gsub("black", "#000000", gsub("white", "#ffffff", gsub("(#...) ", "\\1000 ", gsub("(#...)$", "\\1000", gsub("(#fff)$", "\\1fff", gsub("(#fff) ", "\\1fff ", country_colors$colors))))))) %>% 
+  mutate(colors1 = gsub("white", "#ffffff", colors)) %>% 
+  mutate(colors2 = gsub("(#fff)$", "\\1fff", colors1)) %>% 
+  mutate(colors3 = gsub("(#fff) ", "\\1fff ", colors2)) %>% 
+  mutate(colors4 = gsub("(#000)$", "\\1000", colors3)) %>% 
+  mutate(colors5 = gsub("(#000) ", "\\1000 ", colors4)) %>% 
+  mutate(colors6 = gsub("(#090)$", "#009900", colors5)) %>% 
+  mutate(colors7 = gsub("(#090) ", "#009900 ", colors6)) %>% 
+  mutate(colors8 = gsub("(#f00)$", "#ff0000", colors7)) %>% 
+  mutate(colors9 = gsub("(#f00) ", "#ff0000 ", colors8)) %>% 
+  mutate(colors10 = gsub("(#f93)$", "#ff9933", colors9)) %>% 
+  mutate(colors11 = gsub("(#f93) ", "#ff9933 ", colors10)) %>% 
+  mutate(colors12 = gsub("(#008)$", "#000088", colors11)) %>% 
+  mutate(colors13 = gsub("(#008) ", "#000088 ", colors12)) %>% 
+  mutate(colors14 = gsub("(#fc0)$", "#ffcc00", colors13)) %>% 
+  mutate(colors15 = gsub("(#fc0) ", "#ffcc00 ", colors14)) %>% 
+  mutate(colors16 = gsub("(#060)$", "#006600", colors15)) %>% 
+  mutate(colors17 = gsub("(#060) ", "#006600 ", colors16)) %>% 
+  mutate(colors18 = gsub("(#c00)$", "#cc0000", colors17)) %>% 
+  mutate(colors19 = gsub("(#c00) ", "#cc0000 ", colors18)) %>% 
+  mutate(colors20 = gsub("(#ff0)$", "#ffff00", colors19)) %>% 
+  mutate(colors21 = gsub("(#ff0) ", "#ffff00 ", colors20)) %>% 
+  mutate(colors22 = gsub("(#d00)$", "#dd0000", colors21)) %>% 
+  mutate(colors23 = gsub("(#d00) ", "#dd0000 ", colors22)) %>% 
+  mutate(colors24 = gsub("(#039)$", "#003399", colors23)) %>% 
+  mutate(colors25 = gsub("(#039) ", "#003399 ", colors24)) %>% 
+  mutate(colors26 = gsub("(#fd0)$", "#ffdd00", colors25)) %>% 
+  mutate(colors27 = gsub("(#fd0) ", "#ffdd00 ", colors26)) %>% 
+  mutate(colors28 = gsub("(#ccc)$", "#cccccc", colors27)) %>% 
+  mutate(colors29 = gsub("(#ccc) ", "#cccccc ", colors28)) %>% 
+  mutate(colors30 = gsub("(#6cf)$", "#66ccff", colors29)) %>% 
+  mutate(colors31 = gsub("(#6cf) ", "#66ccff ", colors30)) %>% 
+  mutate(final_colors = ifelse(iso3 %in% c("TTO","JAM"), paste0(colors31, " ", "#000000"), colors31)) %>% 
+  mutate(palette = strsplit(str_trim(as.character(final_colors)), " "))
+#country_colors[country_colors$country=="Algeria",]
+country_colors$old_colors <- NULL
+country_colors <- country_colors[,c(1,4,3,37)]
+country_colors <- country_colors[order(country_colors$country),]
+row.names(country_colors) <- NULL
+
+saveRDS(country_colors, file="Desktop/aRt/country_color_palette.Rda")
+
+cc <- readRDS("/Users/carlborstell/Desktop/aRt/country_color_palette.Rda")
+
+us <- cc[cc$country=="United States",]$palette[[1]]
+cc[cc$iso2=="TT",]$palette[[1]]
+
+pl <- cc[cc$iso2=="PL",]$palette[[1]]
+sort(pl)
+lighten("#dc143c",0.5)
+lighten("#ffffff",0.5)  
+  
+spl <- sort(pl)
+
+expand_palette <- function(palette) {
+  longer <- c()
+  for (h in palette) {
+    longer <- c(longer, h, tolower(lighten(h, 0.5)))
+  }
+  return(longer)
+}
+expand_palette(spl)
+
+
+

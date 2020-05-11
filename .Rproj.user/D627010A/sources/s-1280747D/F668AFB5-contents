@@ -1,0 +1,67 @@
+library(tidyverse)
+library(magick)
+library(hash)
+
+
+#cb <- image_read("/Users/carlborstell/Downloads/TU-0fLGM_400x400.jpg")
+cb <- image_read("/Users/carlborstell/Downloads/cb.png")
+cb
+cb <- image_background(cb, "none")
+cb
+cb <- image_scale(cb, geometry="100x")
+cb <- image_channel(cb)
+cb
+cb_raster <- as.raster(cb)
+#cb_raster[1,1]
+
+#cb3 <- matrix(nrow = 400, ncol = 400)
+#substr("#595959ff", 2, 7)
+threeify <- function(color) {
+  dec <- hex2dec(substr(color, 2,7))
+  #ifelse(dec > 11382189, 2, ifelse(dec > 5855577, 1, 0))
+  ifelse(dec == 0, NA, ifelse(dec > 9539985, 2, ifelse(dec > 5855577, 1, 0)))
+  #ifelse(dec == 0, NA, ifelse(dec > 3*4194304, 3, ifelse(dec > 2*4194304, 2, ifelse(dec > 4194304, 1, 0))))
+}
+2*4194304
+3*4194304
+#cb_raster[240:264]
+#threeify(cb_raster[240,254])
+hex2dec("ffffff")/4
+
+xs <- c()
+ys <- c()
+cols <- c()
+
+for (y in 1:nrow(cb_raster)) {
+  for (x in 1:ncol(cb_raster)){
+    xs <- c(xs, x)
+    ys <- c(ys, nrow(cb_raster)-y)
+    cols <- c(cols, threeify(cb_raster[y,x]))
+  }
+}
+
+data <- data.frame(x=xs, y=ys, color=cols)
+
+us <- cc[cc$iso2=="US",]$palette[[1]]
+us
+usord <- ordered(us, order(us))
+ordered(us)
+sort(us)
+sort(s)
+flag_hash["Afghanistan"]
+tt <- cc[cc$iso2=="TT",]$palette[[1]]
+#tt <- c(tt, "#000000")
+sort(cc[cc$iso2=="AF",]$palette[[1]])
+
+sw <- sort(expand_palette(cc[cc$iso2=="SE",]$palette[[1]]))
+
+ggplot(data) +
+  #geom_rect(aes(xmin=-5, xmax=68, ymin=-5, ymax=106), fill="#2C68A2") +
+  geom_tile(aes(x=x, y=y, fill=factor(color))) +
+  scale_fill_manual(breaks=c(0,1,2), labels=c("0","1","2"), values=sw, guide=FALSE) +
+  #scale_fill_manual(breaks=c(0,1,2), labels=c("0","1","2"), values=c("#2C68A2", "#7C92A1", "#F6CE46"), guide=FALSE) +
+  #scale_fill_manual(breaks=c(0,1,2,3), labels=c("0","1","2", "3"), values=c("#11304D", "#C6322E", "#7A949F", "#F9E4AF"), guide=FALSE) +
+  #scale_fill_manual(values=wes_palette(16,3)) +
+  coord_fixed() +
+  theme_void()
+
