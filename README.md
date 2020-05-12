@@ -5,7 +5,7 @@
 ```
 devtools::install_github("borstell/flagrant")
 
-library(flagrant
+library(flagrant)
 ```
 
 ## Country flag palettes
