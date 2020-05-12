@@ -19,7 +19,7 @@ flag_image <- function(image, country="SE", destination="", scale=100, bg="black
     ggplot2::coord_fixed() +
     ggplot2::theme_void()
   if (destination != "") {
-    ggplot2::ggsave(flag_img)
+    ggplot2::ggsave(flag_img, filename = destination)
     return(destination)
   }
   else {
