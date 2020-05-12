@@ -6,7 +6,7 @@
 #' @return A color palette
 #' @export
 get_palette <- function(country) {
-  country_palettes <- load(system.file("data", "country_palettes.rda", package = "flagrant"))
+  country_palettes <- flagrant::country_palettes
   if (nchar(country) < 4) {
     country <- toupper(country)
     ifelse(nchar(country)==2, palette <- country_palettes[country_palettes$iso2==country,]$palette[[1]], palette <- country_palettes[country_palettes$iso3==country,]$palette[[1]])
