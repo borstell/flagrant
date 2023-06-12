@@ -44,9 +44,9 @@ Saving 7 x 7 in image
 ```
 
 #### Examples
-🇸🇪 ![Sweden](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_SWEDEN.png)
-🇳🇱 ![Netherlands](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_NETHERLANDS.png)
-🇺🇸 ![](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_USA.png)
-🇩🇰 ![](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_DENMARK.png)
-🇹🇹 ![Trinidad & Tobago](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_TRINIDAD.png)
-🇩🇪 ![Germany](https://raw.githubusercontent.com/borstell/borstell.github.io/master/images/cb_GERMANY.png)
+🇸🇪 ![Sweden](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_SWEDEN.png)
+🇳🇱 ![Netherlands](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_NETHERLANDS.png)
+🇺🇸 ![](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_USA.png)
+🇩🇰 ![](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_DENMARK.png)
+🇹🇹 ![Trinidad & Tobago](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_TRINIDAD.png)
+🇩🇪 ![Germany](https://raw.githubusercontent.com/borstell/borstell.github.io/master/media/flagrant/cb_GERMANY.png)
